@@ -109,9 +109,9 @@ class SnakeViewer(arcade.Window):
                 if self.steps_taken % 50000 == 0:
                     print(self.high_score, self.steps_taken)
             self.steps_taken += 1
-            self.ai.epsilon = 0.005+0.95*math.e**(-0.00001*self.steps_taken)
-        else:
-            self.ai.epsilon = 0
+            #self.ai.epsilon = 0.005+0.95*math.e**(-0.00001*self.steps_taken)
+        #else:
+        self.ai.epsilon = 0
 
         if self.env.steps_since_food > 10 * len(self.env.snake):
             self.ai.epsilon = 1.01
