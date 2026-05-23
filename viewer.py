@@ -6,15 +6,18 @@ from snake_env import SnakeEnv, GRID_COLS, GRID_ROWS, NUM_ACTIONS
 from nn import SnakeAI
 import edit_file as ef
 
-CELL_SIZE = 50
-SCREEN_WIDTH = GRID_COLS * CELL_SIZE
-SCREEN_HEIGHT = GRID_ROWS * CELL_SIZE
+SCREEN_WIDTH, SCREEN_HEIGHT = arcade.window_commands.get_display_size()
+
+CELL_SIZE = SCREEN_WIDTH//50
+FONT_SIZE = SCREEN_WIDTH//150
+SNAKE_WIDTH = GRID_COLS * CELL_SIZE
+SNAKE_HEIGHT = GRID_ROWS * CELL_SIZE
 SCREEN_TITLE = "Snake Viewer"
 
 
 def cell_center(col, row):
     x = col * CELL_SIZE + CELL_SIZE / 2
-    y = row * CELL_SIZE + CELL_SIZE / 2
+    y = SCREEN_HEIGHT-(row * CELL_SIZE + CELL_SIZE / 2)
     return x, y
 
 
@@ -22,6 +25,7 @@ class SnakeViewer(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         arcade.set_background_color(arcade.color.BLACK)
+        self.set_location(0,0)
         self.env = SnakeEnv()
         self.ai = SnakeAI()
         self.env.reset()
@@ -53,34 +57,36 @@ class SnakeViewer(arcade.Window):
             color = arcade.color.LIME_GREEN if i == 0 else arcade.color.GREEN
             arcade.draw_rectangle_filled(x, y, CELL_SIZE - 1, CELL_SIZE - 1, color)
 
-        arcade.draw_text(f"Score: {self.env.score}", 8, SCREEN_HEIGHT - 22,
-                         arcade.color.WHITE, 14)
+        arcade.draw_text(f"Score: {self.env.score}", 8, SCREEN_HEIGHT-SNAKE_HEIGHT - FONT_SIZE - 5,
+                         arcade.color.WHITE, FONT_SIZE)
         
-        arcade.draw_text(f"High Score: {self.high_score}", 8, SCREEN_HEIGHT - 42,
-                         arcade.color.WHITE, 14)
+        arcade.draw_text(f"High Score: {self.high_score}", 8, SCREEN_HEIGHT-SNAKE_HEIGHT - FONT_SIZE*2.5 - 5,
+                         arcade.color.WHITE, FONT_SIZE)
         
-        arcade.draw_text(f"Total Steps Taken: {self.steps_taken}", 8, SCREEN_HEIGHT - 62,
-                         arcade.color.WHITE, 14)
+        arcade.draw_text(f"Total Steps Taken: {self.steps_taken}", 8, SCREEN_HEIGHT-SNAKE_HEIGHT - FONT_SIZE*4 - 5,
+                         arcade.color.WHITE, FONT_SIZE)
         
-        arcade.draw_text(f"Force Random Timer: {int(self.env.steps_since_food*100/(10*len(self.env.snake)))}%", 8, SCREEN_HEIGHT - 82,
-                         arcade.color.WHITE, 14)
+        arcade.draw_text(f"Death Timer: {int(self.env.steps_since_food/len(self.env.snake))}%", 8, SCREEN_HEIGHT-SNAKE_HEIGHT - FONT_SIZE*5.5 - 5,
+                         arcade.color.WHITE, FONT_SIZE)
         
-        arcade.draw_text(f"Move Interval: {self.move_interval} seconds", 8, SCREEN_HEIGHT - 102,
-                         arcade.color.WHITE, 14)
+        arcade.draw_text(f"Move Interval: {self.move_interval} seconds", 8, SCREEN_HEIGHT-SNAKE_HEIGHT - FONT_SIZE*7 - 5,
+                         arcade.color.WHITE, FONT_SIZE)
         
-        arcade.draw_text(f"Epsilon: {self.ai.epsilon}", 8, SCREEN_HEIGHT - 122,
-                         arcade.color.WHITE, 14)
+        arcade.draw_text(f"Epsilon: {self.ai.epsilon}", 8, SCREEN_HEIGHT-SNAKE_HEIGHT - FONT_SIZE*8.5 - 5,
+                         arcade.color.WHITE, FONT_SIZE)
         
-        arcade.draw_text("State: Training(T to toggle)" if self.training else "State: Testing(T to toggle)", 8, SCREEN_HEIGHT - 152,
-                         arcade.color.WHITE, 14)
+        arcade.draw_text("State: Training(T to toggle)" if self.training else "State: Testing(T to toggle)", 8, SCREEN_HEIGHT-SNAKE_HEIGHT - FONT_SIZE*10 - 5,
+                         arcade.color.WHITE, FONT_SIZE)
+        
+        arcade.draw_rectangle_outline(SNAKE_WIDTH/2, SCREEN_HEIGHT - SNAKE_HEIGHT/2, SNAKE_WIDTH, SNAKE_HEIGHT, arcade.color.WHITE)
 
         if self.paused and not self.env.game_over:
-            arcade.draw_text("PAUSED", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                             arcade.color.WHITE, 36, anchor_x="center")
+            arcade.draw_text("PAUSED", SNAKE_WIDTH / 2, SCREEN_HEIGHT-SNAKE_HEIGHT / 2,
+                             arcade.color.WHITE, FONT_SIZE*2, anchor_x="center")
 
         if self.env.game_over:
-            arcade.draw_text("Dead", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 16,
-                             arcade.color.RED, 40, anchor_x="center")
+            arcade.draw_text("Dead", SNAKE_WIDTH / 2, SCREEN_HEIGHT-SNAKE_HEIGHT / 2 + 16,
+                             arcade.color.RED, FONT_SIZE*2, anchor_x="center")
 
     def on_update(self, delta_time):
         if self.paused:
@@ -113,9 +119,9 @@ class SnakeViewer(arcade.Window):
         else:
             self.ai.epsilon = 0
 
-        if self.env.steps_since_food > 10 * len(self.env.snake):
-            self.ai.epsilon = 1.01
-            self.env.steps_since_food = 0
+        #if self.env.steps_since_food > 10 * len(self.env.snake):
+        #    self.ai.epsilon = 1.01
+        #    self.env.steps_since_food = 0
 
         if self.env.score > self.high_score:
             self.high_score = self.env.score

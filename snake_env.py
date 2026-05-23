@@ -20,10 +20,10 @@ DIRECTIONS = [UP, UPRIGHT, RIGHT, DOWNRIGHT, DOWN, DOWNLEFT, LEFT, UPLEFT]
 OBS_DIM = 28
 NUM_ACTIONS = 3  # 0 = turn left, 1 = straight, 2 = turn right
 
-FOOD_REWARD = 12
-DEATH_REWARD = -12
-TOWARDS_REWARD = 0.001
-AWAY_REWARD = -0.2
+FOOD_REWARD = 10
+DEATH_REWARD = -10
+TOWARDS_REWARD = 0.1
+AWAY_REWARD = -0.15
 
 
 class SnakeEnv():
@@ -76,6 +76,10 @@ class SnakeEnv():
         if new_head in self.snake[:-1]:
             self.game_over = True
             return self._observe(), DEATH_REWARD, True
+        
+        if self.steps_since_food > 100 * len(self.snake):
+            self.game_over = True
+            return self._observe(), DEATH_REWARD, True
 
         self.snake.insert(0, new_head)
 
@@ -108,7 +112,7 @@ class SnakeEnv():
                 if cur_check == self.food:
                     obs[3*i, 0] = 1
                 if cur_check in self.snake:
-                    obs[3*i + 1, 0] = 1
+                    obs[3*i + 1, 0] = 1/distance
                     break
                 if x >= GRID_COLS or x < 0 or y >= GRID_ROWS or y < 0:
                     obs[3*i + 2, 0] = 1/distance
