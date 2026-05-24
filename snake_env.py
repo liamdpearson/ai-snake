@@ -77,7 +77,7 @@ class SnakeEnv():
             self.game_over = True
             return self._observe(), DEATH_REWARD, True
         
-        if self.steps_since_food > 100 * len(self.snake):
+        if self.steps_since_food > 60 * len(self.snake):
             self.game_over = True
             return self._observe(), DEATH_REWARD, True
 
