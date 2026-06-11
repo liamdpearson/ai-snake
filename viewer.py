@@ -38,7 +38,7 @@ class SnakeViewer(arcade.Window):
         self.input_n_output = None
         self.pressed_keys = []
 
-        self.init_draw_nn()
+        # self.init_draw_nn()
 
     def init_draw_nn(self):
         self.num_layers = 4
@@ -148,8 +148,8 @@ class SnakeViewer(arcade.Window):
             arcade.draw_text("Dead", SNAKE_WIDTH / 2, SCREEN_HEIGHT-SNAKE_HEIGHT / 2 + 16,
                              arcade.color.RED, FONT_SIZE*2, anchor_x="center")
         
-        if not self.training:
-            self.draw_nn(self.ai.W1, self.ai.W2, self.ai.W3)
+        #if not self.training:
+            #self.draw_nn(self.ai.W1, self.ai.W2, self.ai.W3)
 
 
     def on_update(self, delta_time):
