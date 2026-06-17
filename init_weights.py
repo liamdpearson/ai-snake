@@ -4,7 +4,7 @@
 import numpy as np
 
 # init weights
-W1 = np.random.randn(20, 28) * np.sqrt(2.0 / 28)
+W1 = np.random.randn(20, 29) * np.sqrt(2.0 / 29)
 b1 = np.zeros((20, 1))
 W2 = np.random.randn(12, 20) * np.sqrt(2.0 / 20)
 b2 = np.zeros((12, 1))

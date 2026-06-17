@@ -38,10 +38,10 @@ class SnakeAI:
         idx = random.sample(range(len(self.training_data)), self.batch_size)
         batch = [self.training_data[i] for i in idx]
 
-        X      = np.hstack([t[0] for t in batch])              # (28, B)
+        X      = np.hstack([t[0] for t in batch])              # (29, B)
         action = np.array([t[1] for t in batch], dtype=np.int64)
         reward = np.array([t[2] for t in batch], dtype=np.float64)
-        X_next = np.hstack([t[3] for t in batch])              # (28, B)
+        X_next = np.hstack([t[3] for t in batch])              # (29, B)
         done   = np.array([t[4] for t in batch], dtype=np.float64)
 
         # Build targets from the next state (no grad through this branch)

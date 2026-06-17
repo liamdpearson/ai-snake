@@ -17,7 +17,7 @@ UPLEFT = (-1, 1)
 CARDINAL_DIRS = [UP, RIGHT, DOWN, LEFT]
 DIRECTIONS = [UP, UPRIGHT, RIGHT, DOWNRIGHT, DOWN, DOWNLEFT, LEFT, UPLEFT]
 
-OBS_DIM = 28
+OBS_DIM = 29
 NUM_ACTIONS = 3  # 0 = turn left, 1 = straight, 2 = turn right
 
 FOOD_REWARD = 10
@@ -77,9 +77,9 @@ class SnakeEnv():
             self.game_over = True
             return self._observe(), DEATH_REWARD, True
         
-        if self.steps_since_food > 60 * len(self.snake):
+        if self.steps_since_food >= 60 * len(self.snake):
             self.game_over = True
-            return self._observe(), 0, True
+            return self._observe(), DEATH_REWARD, True
 
         self.snake.insert(0, new_head)
 
@@ -120,6 +120,7 @@ class SnakeEnv():
                 distance += 1
 
         obs[24 + CARDINAL_DIRS.index(self.direction), 0] = 1
+        obs[28, 0] = self.steps_since_food/(len(self.snake) * 60)
         return obs
 
 

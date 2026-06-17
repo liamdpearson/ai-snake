@@ -38,7 +38,7 @@ class SnakeViewer(arcade.Window):
         self.input_n_output = None
         self.pressed_keys = []
 
-        # self.init_draw_nn()
+        self.init_draw_nn()
 
     def init_draw_nn(self):
         self.num_layers = 4
@@ -53,10 +53,10 @@ class SnakeViewer(arcade.Window):
         self.node_radius = min(self.region_height / 70,
                           self.region_width / 24)
 
-        self.spacing = self.region_height / 28
+        self.spacing = self.region_height / 29
         self.center_y = (self.region_top + self.region_bottom) / 2
         self.layer_positions = []
-        for i, size in enumerate([28,20,12,3]):
+        for i, size in enumerate([29,20,12,3]):
             x = self.region_left + self.region_width * (i + 0.5) / self.num_layers
             layer_top = self.center_y + self.spacing * size / 2
             ys = [layer_top - self.spacing * (j + 0.5) for j in range(size)]
@@ -148,8 +148,8 @@ class SnakeViewer(arcade.Window):
             arcade.draw_text("Dead", SNAKE_WIDTH / 2, SCREEN_HEIGHT-SNAKE_HEIGHT / 2 + 16,
                              arcade.color.RED, FONT_SIZE*2, anchor_x="center")
         
-        #if not self.training:
-            #self.draw_nn(self.ai.W1, self.ai.W2, self.ai.W3)
+        if not self.training:
+            self.draw_nn(self.ai.W1, self.ai.W2, self.ai.W3)
 
 
     def on_update(self, delta_time):
@@ -188,7 +188,7 @@ class SnakeViewer(arcade.Window):
                 if self.steps_taken % 50000 == 0:
                     print(self.high_score, self.steps_taken)
             self.steps_taken += 1
-            self.ai.epsilon = 0.05+0.95*math.e**(-0.00001*self.steps_taken)
+            self.ai.epsilon = 0.001+0.999*math.e**(-0.00001*self.steps_taken)
         else:
             self.ai.epsilon = 0
 
