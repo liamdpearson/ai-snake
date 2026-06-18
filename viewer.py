@@ -33,6 +33,7 @@ class SnakeViewer(arcade.Window):
         self.move_interval = 0.2
         self.paused = False
         self.training = False
+        self.show_nn = False
         self.steps_taken, self.high_score = ef.load_data()
         self.ai.epsilon = 0 # chance to make random move
         self.input_n_output = None
@@ -97,7 +98,7 @@ class SnakeViewer(arcade.Window):
                          arcade.color.WHITE, FONT_SIZE)
 
     def select_action(self):
-        X = self.env._observe()
+        X = self.env.observe()
         if np.random.rand() < self.ai.epsilon:
             action = np.random.randint(NUM_ACTIONS)
         else:
@@ -148,7 +149,7 @@ class SnakeViewer(arcade.Window):
             arcade.draw_text("Dead", SNAKE_WIDTH / 2, SCREEN_HEIGHT-SNAKE_HEIGHT / 2 + 16,
                              arcade.color.RED, FONT_SIZE*2, anchor_x="center")
         
-        if not self.training:
+        if self.show_nn:
             self.draw_nn(self.ai.W1, self.ai.W2, self.ai.W3)
 
 
@@ -204,6 +205,9 @@ class SnakeViewer(arcade.Window):
         
         if key == arcade.key.T:
             self.training = not self.training
+
+        if key == arcade.key.N:
+            self.show_nn = not self.show_nn
 
     def on_key_release(self, key, modifiers):
         self.pressed_keys.remove(key)

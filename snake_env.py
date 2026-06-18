@@ -43,7 +43,7 @@ class SnakeEnv():
         self.score = 0
         self.steps_since_food = 0
         self.place_food()
-        return self._observe()
+        return self.observe()
 
     def place_food(self):
         snake_set = set(self.snake)
@@ -56,7 +56,7 @@ class SnakeEnv():
 
     def step(self, action):
         if self.game_over:
-            return self._observe(), 0.0, True
+            return self.observe(), 0.0, True
         
         self.steps_since_food += 1
 
@@ -71,15 +71,15 @@ class SnakeEnv():
         if (new_head[0] < 0 or new_head[0] >= GRID_COLS or
                 new_head[1] < 0 or new_head[1] >= GRID_ROWS):
             self.game_over = True
-            return self._observe(), DEATH_REWARD, True
+            return self.observe(), DEATH_REWARD, True
 
         if new_head in self.snake[:-1]:
             self.game_over = True
-            return self._observe(), DEATH_REWARD, True
+            return self.observe(), DEATH_REWARD, True
         
         if self.steps_since_food >= 60 * len(self.snake):
             self.game_over = True
-            return self._observe(), DEATH_REWARD, True
+            return self.observe(), DEATH_REWARD, True
 
         self.snake.insert(0, new_head)
 
@@ -97,9 +97,9 @@ class SnakeEnv():
         else:
             self.snake.pop()
 
-        return self._observe(), reward, False
+        return self.observe(), reward, False
 
-    def _observe(self):
+    def observe(self):
         obs = np.zeros((OBS_DIM, 1))
         head = self.snake[0]
         for i, dir in enumerate(DIRECTIONS):
