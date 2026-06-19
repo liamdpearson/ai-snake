@@ -2,7 +2,7 @@ import arcade
 import numpy as np
 import math
 
-from snake_env import SnakeEnv, GRID_COLS, GRID_ROWS, NUM_ACTIONS
+from snake_env import SnakeEnv, GRID_COLS, GRID_ROWS, NUM_ACTIONS, DIRECTIONS
 from nn import SnakeAI
 import edit_file as ef
 
@@ -30,7 +30,7 @@ class SnakeViewer(arcade.Window):
         self.ai = SnakeAI()
         self.env.reset()
         self.time_since_move = 0.0
-        self.move_interval = 0.2
+        self.move_interval = 0.1
         self.paused = False
         self.training = False
         self.show_nn = False
@@ -50,6 +50,7 @@ class SnakeViewer(arcade.Window):
         self.region_bottom = CELL_SIZE
         self.region_width = self.region_right - self.region_left
         self.region_height = self.region_top - self.region_bottom
+        self.input_labels = ["Food", "Body", "Wall"] * 8 + ["Up", "Right", "Down", "Left", "Fatigue"]
 
         self.node_radius = min(self.region_height / 70,
                           self.region_width / 24)
@@ -96,6 +97,22 @@ class SnakeViewer(arcade.Window):
             
             arcade.draw_text("Right", self.layer_positions[-1][2][0] + FONT_SIZE*2, self.layer_positions[-1][2][1] - FONT_SIZE/2,
                          arcade.color.WHITE, FONT_SIZE)
+
+            for i, pos in enumerate(self.layer_positions[0]):
+                if i < len(self.input_labels):
+                    arcade.draw_text(self.input_labels[i], pos[0] - FONT_SIZE*2, pos[1] - FONT_SIZE/2,
+                                 arcade.color.WHITE, FONT_SIZE, anchor_x="right")
+                    if self.input_labels[i] in ("Wall", "Left"):
+                        line_y = pos[1] - self.spacing / 2
+                        arcade.draw_line(1145, line_y, 1245, line_y, arcade.color.WHITE, 1)
+    
+
+    def draw_snake_sight(self):
+        hx, hy = cell_center(*self.env.snake[0])
+        for dcol, drow in DIRECTIONS:
+            arcade.draw_line(hx, hy, hx + dcol * 1500, hy + drow * 1500,
+                             arcade.color.RED, 1)
+
 
     def select_action(self):
         X = self.env.observe()
