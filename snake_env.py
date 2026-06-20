@@ -1,6 +1,5 @@
 import random
 import numpy as np
-import edit_file as ef
 
 GRID_COLS = 20
 GRID_ROWS = 20

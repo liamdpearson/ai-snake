@@ -1,1 +1,2 @@
-# ai-snake
+# AI snake
+

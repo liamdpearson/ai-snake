@@ -30,7 +30,7 @@ class SnakeViewer(arcade.Window):
         self.ai = SnakeAI()
         self.env.reset()
         self.time_since_move = 0.0
-        self.move_interval = 0.1
+        self.move_interval = 0.05
         self.paused = False
         self.training = False
         self.show_nn = False
@@ -102,9 +102,6 @@ class SnakeViewer(arcade.Window):
                 if i < len(self.input_labels):
                     arcade.draw_text(self.input_labels[i], pos[0] - FONT_SIZE*2, pos[1] - FONT_SIZE/2,
                                  arcade.color.WHITE, FONT_SIZE, anchor_x="right")
-                    if self.input_labels[i] in ("Wall", "Left"):
-                        line_y = pos[1] - self.spacing / 2
-                        arcade.draw_line(1145, line_y, 1245, line_y, arcade.color.WHITE, 1)
     
 
     def draw_snake_sight(self):
@@ -206,7 +203,7 @@ class SnakeViewer(arcade.Window):
                 if self.steps_taken % 50000 == 0:
                     print(self.high_score, self.steps_taken)
             self.steps_taken += 1
-            self.ai.epsilon = 0.001+0.999*math.e**(-0.00001*self.steps_taken)
+            self.ai.epsilon = 0.05+0.95*math.e**(-0.00001*self.steps_taken)
         else:
             self.ai.epsilon = 0
 
