@@ -166,6 +166,8 @@ class SnakeViewer(arcade.Window):
         if self.show_nn:
             self.draw_nn(self.ai.W1, self.ai.W2, self.ai.W3)
 
+        self.draw_snake_sight()
+
 
     def on_update(self, delta_time):
         if arcade.key.UP in self.pressed_keys:
