@@ -8,6 +8,7 @@ An AI that can play the classic retro game snake.
 ## Game rules
 - The snake dies if it runs into itself or the wall.
 - The snake dies if it takes too long to get food.
+- The snake gains one unit of length every time it eats.
 - 20 x 20 grid
 
 
